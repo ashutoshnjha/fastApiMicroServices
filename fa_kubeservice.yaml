@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anj-app
+  namespace: default
+  labels:
+    app: anj-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anj-app
+  template:
+    metadata:
+      labels:
+        app: anj-app
+    spec:
+      containers:
+      - name: anj-app-site
+        image: anjha/fastapi-hello:latest
+        imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anj-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: anj-app
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30001
